@@ -16,7 +16,7 @@
 ## Installation
 
 ```bash
-npm install objecttune
+npm install object-tune
 ```
 
 ---
@@ -24,7 +24,7 @@ npm install objecttune
 ## Usage
 
 ```typescript
-import { ObjectTune } from 'objecttune';
+import { ObjectTune } from 'object-tune';
 
 const obj = {
     description: 'ALL',

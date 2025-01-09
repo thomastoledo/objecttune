@@ -5,7 +5,7 @@ export default defineConfig({
   resolve: {
     alias: {
       //replace by your lib
-      'mylib': path.resolve(__dirname, '../../dist/esm'),
+      'object-tune': path.resolve(__dirname, '../../dist/esm'),
     },
   },
 });
