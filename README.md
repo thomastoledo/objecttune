@@ -28,9 +28,9 @@ import { ObjectTune } from 'objecttune';
 
 const obj = {
     description: 'ALL',
-    client: 'ALL',
-    statut: 'Active',
-    clientGroup: 'ALL',
+    age: 'ALL',
+    status: 'Active',
+    classroom: 'ALL',
     nested: { key1: 'ALL', key2: 'value2' },
 };
 
@@ -47,7 +47,7 @@ const deepMapped = ObjectTune(obj).deepMap(value => value === 'ALL', null);
 console.log(deepMapped);
 
 // Rename object keys
-const renamed = ObjectTune(obj).renameKeys({ description: 'desc', client: 'customer' });
+const renamed = ObjectTune(obj).renameKeys({ description: 'desc', classroom: 'group' });
 console.log(renamed);
 ```
 

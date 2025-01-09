@@ -1,6 +1,6 @@
 {
   "name": "object-tune",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": [
     "js",
     "javascript",
@@ -42,12 +42,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thomastoledo/Mylib.git"
+    "url": "git+https://github.com/thomastoledo/ObjectTune.git"
   },
   "author": "Thomas TOLEDO",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/thomastoledo/Mylib/issues"
+    "url": "https://github.com/thomastoledo/ObjectTune/issues"
   },
-  "homepage": "https://github.com/thomastoledo/Mylib#readme"
+  "homepage": "https://github.com/thomastoledo/ObjectTune#readme"
 }
