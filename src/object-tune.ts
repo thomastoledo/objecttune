@@ -45,18 +45,40 @@ export class ObjectTuner<T extends Record<string, any> = Record<string, any>> {
         return new ObjectTuner(recurse(this.obj));
     }
 
-    renameKeys(mapping: Partial<Record<keyof T, string>>): ObjectTuner<Record<string, any>> {
-        const result: Record<string, any> = {};
+    map<U>(fn: (value: T[keyof T], key: keyof T) => U): ObjectTuner<Record<keyof T, U>> {
+        const result = {} as Record<keyof T, U>;
         for (const key in this.obj) {
             if (Object.prototype.hasOwnProperty.call(this.obj, key)) {
-                const newKey = mapping[key as keyof T] || key;
-                result[newKey] = this.obj[key];
+                result[key] = fn(this.obj[key], key);
             }
         }
         return new ObjectTuner(result);
     }
 
-    
+    merge<U extends Record<string, any>>(other: U): ObjectTuner<T & U> {
+        return new ObjectTuner({ ...this.obj, ...other });
+    }
+
+    pick<K extends keyof T>(keys: K[]): ObjectTuner<Pick<T, K>> {
+        return this.filter((key) => keys.includes(key as K)) as unknown as ObjectTuner<Pick<T, K>>;
+    }
+
+    omit<K extends keyof T>(keys: K[]): ObjectTuner<Omit<T, K>> {
+        return this.filter((key) => !keys.includes(key as K)) as unknown as ObjectTuner<Omit<T, K>>;
+    }
+
+    deepClone(): ObjectTuner<T> {
+        return this.deepReplace(() => false, null);
+    }
+
+    hasKey(key: keyof T): boolean {
+        return key in this.obj;
+    }
+
+    get<K extends keyof T>(key: K, defaultValue?: T[K]): T[K] {
+        return key in this.obj ? this.obj[key] : (defaultValue as T[K]);
+    }
+
     deleteProperties(keys: string[]): ObjectTuner {
         const result: Record<string, any> = {};
         for (const key in this.obj) {

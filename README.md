@@ -1,73 +1,142 @@
-# ObjectTune
+# ObjectTuner
 
-**ObjectTune** is a lightweight TypeScript library for dynamically transforming, filtering, and restructuring object properties based on custom rules. It simplifies handling complex object transformations with a clean and intuitive API.
-
----
-
-## Features
-
-- **Dynamic Property Mapping**: Replace object property values using custom predicates.
-- **Property Filtering**: Remove or keep properties based on key-value conditions.
-- **Recursive Transformation**: Apply transformations deeply to nested objects.
-- **Key Renaming**: Easily rename object keys with a mapping.
-
----
+`ObjectTuner` is a TypeScript utility class for manipulating objects in a functional way. It provides methods for replacing, filtering, mapping, merging, picking, omitting, and cloning object properties.
 
 ## Installation
 
+To install the package, use npm or yarn:
+
 ```bash
 npm install object-tune
+# or
+yarn add object-tune
 ```
 
----
-
 ## Usage
+
+### Creating an ObjectTuner
+
+To create an `ObjectTuner` instance, use the `ObjectTune` function:
 
 ```typescript
 import { ObjectTune } from 'object-tune';
 
-const obj = {
-    description: 'ALL',
-    age: 'ALL',
-    status: 'Active',
-    classroom: 'ALL',
-    nested: { key1: 'ALL', key2: 'value2' },
-};
-
-// Replace all 'ALL' values with null
-const mapped = ObjectTune(obj).map(value => value === 'ALL', null);
-console.log(mapped);
-
-// Filter out keys where the value is 'ALL'
-const filtered = ObjectTune(obj).filter((key, value) => value !== 'ALL');
-console.log(filtered);
-
-// Recursively replace 'ALL' with null
-const deepMapped = ObjectTune(obj).deepMap(value => value === 'ALL', null);
-console.log(deepMapped);
-
-// Rename object keys
-const renamed = ObjectTune(obj).renameKeys({ description: 'desc', classroom: 'group' });
-console.log(renamed);
+const obj = { a: 1, b: 2, c: 3 };
+const tuner = ObjectTune(obj);
 ```
 
----
+### Methods
 
-## API
+#### `replace(predicate: (value: any) => boolean, replacement: any): ObjectTuner<T>`
 
-### `map(predicate, replacement)`
-Maps property values based on the given predicate.
+Replaces values in the object that match the predicate with the replacement value.
 
-### `filter(predicate)`
-Filters properties based on key-value conditions.
+```typescript
+const updated = tuner.replace(value => value === 2, 42).value();
+console.log(updated); // { a: 1, b: 42, c: 3 }
+```
 
-### `deepMap(predicate, replacement)`
-Recursively maps values in deeply nested objects.
+#### `filter(predicate: (key: keyof T, value: T[keyof T]) => boolean): ObjectTuner<Partial<T>>`
 
-### `renameKeys(mapping)`
-Renames keys based on a provided mapping.
+Filters the object properties based on the predicate.
 
----
+```typescript
+const filtered = tuner.filter((key, value) => value > 1).value();
+console.log(filtered); // { b: 2, c: 3 }
+```
+
+#### `deepReplace(predicate: (value: any) => boolean, replacement: any): ObjectTuner<T>`
+
+Recursively replaces values in the object that match the predicate with the replacement value.
+
+```typescript
+const deepObj = { a: 1, b: { c: 2, d: 3 } };
+const deepTuner = ObjectTune(deepObj);
+const deepUpdated = deepTuner.deepReplace(value => value === 2, 42).value();
+console.log(deepUpdated); // { a: 1, b: { c: 42, d: 3 } }
+```
+
+#### `map<U>(fn: (value: T[keyof T], key: keyof T) => U): ObjectTuner<Record<keyof T, U>>`
+
+Maps the object properties using the provided function.
+
+```typescript
+const mapped = tuner.map(value => value * 2).value();
+console.log(mapped); // { a: 2, b: 4, c: 6 }
+```
+
+#### `merge<U extends Record<string, any>>(other: U): ObjectTuner<T & U>`
+
+Merges the object with another object.
+
+```typescript
+const merged = tuner.merge({ d: 4 }).value();
+console.log(merged); // { a: 1, b: 2, c: 3, d: 4 }
+```
+
+#### `pick<K extends keyof T>(keys: K[]): ObjectTuner<Pick<T, K>>`
+
+Picks the specified keys from the object.
+
+```typescript
+const picked = tuner.pick(['a', 'c']).value();
+console.log(picked); // { a: 1, c: 3 }
+```
+
+#### `omit<K extends keyof T>(keys: K[]): ObjectTuner<Omit<T, K>>`
+
+Omits the specified keys from the object.
+
+```typescript
+const omitted = tuner.omit(['b']).value();
+console.log(omitted); // { a: 1, c: 3 }
+```
+
+#### `deepClone(): ObjectTuner<T>`
+
+Creates a deep clone of the object.
+
+```typescript
+const cloned = tuner.deepClone().value();
+console.log(cloned); // { a: 1, b: 2, c: 3 }
+```
+
+#### `hasKey(key: keyof T): boolean`
+
+Checks if the object has the specified key.
+
+```typescript
+const hasKey = tuner.hasKey('a');
+console.log(hasKey); // true
+```
+
+#### `get<K extends keyof T>(key: K, defaultValue?: T[K]): T[K]`
+
+Gets the value of the specified key, or returns the default value if the key does not exist.
+
+```typescript
+const value = tuner.get('b', 0);
+console.log(value); // 2
+```
+
+#### `deleteProperties(keys: string[]): ObjectTuner`
+
+Deletes the specified properties from the object.
+
+```typescript
+const cleaned = tuner.deleteProperties(['b']).value();
+console.log(cleaned); // { a: 1, c: 3 }
+```
+
+#### `value(): T`
+
+Returns the current value of the object.
+
+```typescript
+const value = tuner.value();
+console.log(value); // { a: 1, b: 2, c: 3 }
+```
 
 ## License
-MIT
+
+This project is licensed under the MIT License.
