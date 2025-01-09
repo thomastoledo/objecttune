@@ -1,5 +1,5 @@
 {
-  "name": "mylib",
+  "name": "object-tune",
   "version": "0.0.1",
   "keywords": [
     "js",
@@ -7,7 +7,7 @@
     "utility",
     "typescript"
   ],
-  "description": "mylib description",
+  "description": "ObjectTune is a lightweight TypeScript utility for dynamically transforming object properties based on custom rules.",
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.2",
