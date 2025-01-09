@@ -10,8 +10,8 @@ describe('ObjectTune', () => {
     };
 
     it('should map values correctly', () => {
-        const result = ObjectTune(obj).map(value => value === 'ALL', null);
-        expect(result).toEqual({
+        const result = ObjectTune(obj).replace(value => value === 'ALL', null);
+        expect(result.value()).toEqual({
             description: null,
             client: null,
             statut: 'Active',
@@ -22,15 +22,15 @@ describe('ObjectTune', () => {
 
     it('should filter keys correctly', () => {
         const result = ObjectTune(obj).filter((key, value) => value !== 'ALL');
-        expect(result).toEqual({
+        expect(result.value()).toEqual({
             statut: 'Active',
             nested: { key1: 'ALL', key2: 'value2' },
         });
     });
 
     it('should deep map values correctly', () => {
-        const result = ObjectTune(obj).deepMap(value => value === 'ALL', null);
-        expect(result).toEqual({
+        const result = ObjectTune(obj).deepReplace(value => value === 'ALL', null);
+        expect(result.value()).toEqual({
             description: null,
             client: null,
             statut: 'Active',
@@ -42,7 +42,7 @@ describe('ObjectTune', () => {
     it('should rename keys correctly', () => {
         const mapping = { description: 'desc', client: 'customer', statut: 'status' };
         const result = ObjectTune(obj).renameKeys(mapping);
-        expect(result).toEqual({
+        expect(result.value()).toEqual({
             desc: 'ALL',
             customer: 'ALL',
             status: 'Active',
